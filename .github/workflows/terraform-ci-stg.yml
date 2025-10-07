@@ -36,14 +36,14 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
       - name: Run TFLint (Stg)
-        run: tflint --config=workspaces/staging/.tflint.hcl
+        run: tflint --config=.tflint.hcl
 
       - name: Install Checkov
         run: |
           pip install checkov
 
       - name: Run Checkov (Stg)
-        run: checkov -d . --config-file=workspaces/staging/checkov.yml
+        run: checkov -d . --config-file=checkov.yml
 
       - name: Check Terraform Format
         run: terraform fmt -check
