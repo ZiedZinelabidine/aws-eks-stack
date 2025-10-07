@@ -26,7 +26,7 @@ jobs:
         run: cd workspaces/staging
 
       - name: Terraform Init (Stg)
-        run: terraform init -backend-config=workspaces/stg/backend.tfvars
+        run: terraform init
 
       - name: Terraform Validate (Stg)
         run: terraform validate
@@ -36,14 +36,14 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
       - name: Run TFLint (Stg)
-        run: tflint --config=workspaces/stg/.tflint.hcl
+        run: tflint --config=workspaces/staging/.tflint.hcl
 
       - name: Install Checkov
         run: |
           pip install checkov
 
       - name: Run Checkov (Stg)
-        run: checkov -d . --config-file=workspaces/stg/checkov.yml
+        run: checkov -d . --config-file=workspaces/staging/checkov.yml
 
       - name: Check Terraform Format
         run: terraform fmt -check

@@ -21,7 +21,7 @@ jobs:
         run: cd workspaces/prod
 
       - name: Terraform Init (Prod)
-        run: terraform init -backend-config=workspaces/prod/backend.tfvars
+        run: terraform init
 
       - name: Terraform Validate (Prod)
         run: terraform validate
