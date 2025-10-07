@@ -16,6 +16,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
+      
+      - name: Change to Prod workspace
+        run: cd workspaces/prod
 
       - name: Terraform Init (Prod)
         run: terraform init -backend-config=workspaces/prod/backend.tfvars

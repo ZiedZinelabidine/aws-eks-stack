@@ -17,6 +17,9 @@ jobs:
         with:
           terraform_version: 1.5.0
 
+      - name: Change to Staging workspace
+        run: cd workspaces/staging
+
       - name: Terraform Init (Stg)
         run: terraform init -backend-config=workspaces/stg/backend.tfvars
 
@@ -42,6 +45,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
+      
+      - name: Change to Staging workspace
+        run: cd workspaces/staging
 
       - name: Terraform Init (Stg)
         run: terraform init -backend-config=workspaces/stg/backend.tfvars
