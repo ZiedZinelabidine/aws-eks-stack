@@ -1,0 +1,58 @@
+name: Terraform CD - Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  plan:
+    name: Terraform Plan (Prod)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Prod)
+        run: terraform init -backend-config=environments/prod/backend.tfvars
+
+      - name: Terraform Plan (Prod)
+        run: terraform plan -out=tfplan -var-file=environments/prod/terraform.tfvars
+
+      - name: Save Terraform Plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-prod
+          path: tfplan
+
+  apply:
+    name: Terraform Apply (Prod)
+    runs-on: ubuntu-latest
+    needs: plan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Prod)
+        run: terraform init -backend-config=environments/prod/backend.tfvars
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-prod
+          path: .
+
+      - name: Terraform Apply (Prod)
+        run: terraform apply tfplan

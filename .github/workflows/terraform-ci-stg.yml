@@ -1,0 +1,46 @@
+name: Terraform CI - Staging
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  validate:
+    name: Validate Terraform (Stg)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Stg)
+        run: terraform init -backend-config=workspaces/stg/backend.tfvars
+
+      - name: Terraform Validate (Stg)
+        run: terraform validate
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint (Stg)
+        run: tflint --config=workspaces/stg/.tflint.hcl
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov (Stg)
+        run: checkov -d . --config-file=workspaces/stg/checkov.yml
+
+      - name: Check Terraform Format
+        run: terraform fmt -check

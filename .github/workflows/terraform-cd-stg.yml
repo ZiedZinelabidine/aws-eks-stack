@@ -1,0 +1,58 @@
+name: Terraform CD - Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  plan:
+    name: Terraform Plan (Stg)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Stg)
+        run: terraform init -backend-config=workspaces/stg/backend.tfvars
+
+      - name: Terraform Plan (Stg)
+        run: terraform plan -out=tfplan -var-file=workspaces/stg/terraform.tfvars
+
+      - name: Save Terraform Plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-stg
+          path: tfplan
+
+  apply:
+    name: Terraform Apply (Stg)
+    runs-on: ubuntu-latest
+    needs: plan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Stg)
+        run: terraform init -backend-config=workspaces/stg/backend.tfvars
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-stg
+          path: .
+
+      - name: Terraform Apply (Stg)
+        run: terraform apply tfplan

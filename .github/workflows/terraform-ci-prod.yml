@@ -1,0 +1,46 @@
+name: Terraform CI - Production
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate Terraform (Prod)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init (Prod)
+        run: terraform init -backend-config=workspaces/prod/backend.tfvars
+
+      - name: Terraform Validate (Prod)
+        run: terraform validate
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint (Prod)
+        run: tflint --config=workspaces/prod/.tflint.hcl
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov (Prod)
+        run: checkov -d . --config-file=workspaces/prod/checkov.yml
+
+      - name: Check Terraform Format
+        run: terraform fmt -check

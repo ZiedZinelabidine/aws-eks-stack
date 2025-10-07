@@ -1,0 +1,16 @@
+# checkov.yml
+
+# Exclure certaines vérifications (optionnel)
+soft-fail: true  # Ne pas échouer immédiatement si une violation est trouvée
+skip-check:
+  - CKV_AWS_20  # Exemple : Exclure la vérification des S3 ACLs publiques
+  - CKV_AWS_18  # Exemple : Exclure la vérification des logs S3 activés
+
+# Inclure des vérifications spécifiques (optionnel)
+check:
+  - CKV_AWS_19  # Exemple : Vérifier que les S3 buckets sont chiffrés
+  - CKV_AWS_21  # Exemple : Vérifier que les S3 buckets ont une politique de versionnement
+
+# Configurer les règles de sécurité pour AWS (optionnel)
+framework: terraform
+secrets-scan: true  # Activer la détection des secrets dans le code
