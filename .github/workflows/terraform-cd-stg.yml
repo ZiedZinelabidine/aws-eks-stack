@@ -1,9 +1,7 @@
 name: Terraform CD - Staging
 
 on:
-  push:
-    branches:
-      - staging
+  workflow_dispatch:
 
 jobs:
   plan:
@@ -56,3 +54,14 @@ jobs:
 
       - name: Terraform Apply (Stg)
         run: terraform apply tfplan
+
+      - name: Trigger Workflow B
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'workflow-b.yml',
+              ref: 'main'
+            })

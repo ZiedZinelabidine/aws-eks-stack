@@ -1,9 +1,7 @@
 name: Terraform CD - Production
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   plan:
@@ -20,10 +18,10 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init (Prod)
-        run: terraform init -backend-config=environments/prod/backend.tfvars
+        run: terraform init -backend-config=workspaces/prod/backend.tfvars
 
       - name: Terraform Plan (Prod)
-        run: terraform plan -out=tfplan -var-file=environments/prod/terraform.tfvars
+        run: terraform plan -out=tfplan -var-file=workspaces/prod/terraform.tfvars
 
       - name: Save Terraform Plan
         uses: actions/upload-artifact@v3
@@ -46,7 +44,7 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Terraform Init (Prod)
-        run: terraform init -backend-config=environments/prod/backend.tfvars
+        run: terraform init -backend-config=workspaces/prod/backend.tfvars
 
       - name: Download Terraform Plan
         uses: actions/download-artifact@v3

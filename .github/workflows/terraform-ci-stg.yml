@@ -3,10 +3,10 @@ name: Terraform CI - Staging
 on:
   push:
     branches:
-      - staging
+      - main
   pull_request:
     branches:
-      - staging
+      - main
 
 jobs:
   validate:
@@ -44,3 +44,15 @@ jobs:
 
       - name: Check Terraform Format
         run: terraform fmt -check
+
+
+      - name: Trigger Workflow B
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'workflow-b.yml',
+              ref: 'main'
+            })
