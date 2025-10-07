@@ -40,13 +40,13 @@ jobs:
       - name: Check Terraform Format
         run: terraform fmt -check
 
-      - name: Trigger Workflow B
+      - name: Trigger Workflow PROD CD
         uses: actions/github-script@v6
         with:
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'workflow-b.yml',
+              workflow_id: 'terraform-cd-prod.yml',
               ref: 'main'
             })

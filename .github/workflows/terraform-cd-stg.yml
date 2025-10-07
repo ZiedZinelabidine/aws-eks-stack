@@ -55,13 +55,13 @@ jobs:
       - name: Terraform Apply (Stg)
         run: terraform apply tfplan
 
-      - name: Trigger Workflow B
+      - name: Trigger Workflow PROD CI
         uses: actions/github-script@v6
         with:
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'workflow-b.yml',
+              workflow_id: 'terraform-ci-prod.yml',
               ref: 'main'
             })
