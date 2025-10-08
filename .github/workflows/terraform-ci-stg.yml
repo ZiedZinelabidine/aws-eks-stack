@@ -43,7 +43,7 @@ jobs:
           pip install checkov
 
       - name: Run Checkov (Stg)
-        run: checkov -d . #--config-file=checkov.yml
+        run: checkov -d . --config-file=files/checkov.yml
 
       - name: Check Terraform Format
         run: terraform fmt -check

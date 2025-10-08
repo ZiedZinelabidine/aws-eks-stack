@@ -10,6 +10,10 @@ skip-check:
 check:
   - CKV_AWS_19  # Exemple : Vérifier que les S3 buckets sont chiffrés
   - CKV_AWS_21  # Exemple : Vérifier que les S3 buckets ont une politique de versionnement
+  - CKV_AWS_1
+  - CKV_AWS_2
+  - CKV_AWS_3
+  - CKV_AWS_4
 
 # Configurer les règles de sécurité pour AWS (optionnel)
 framework: terraform
