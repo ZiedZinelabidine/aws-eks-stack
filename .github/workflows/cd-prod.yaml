@@ -6,7 +6,7 @@ on:
     inputs:
       env:
         description: 'Environment to use (e.g., staging, production)'
-       # required: true
+        required: true
         type: string
 jobs:
   plan:
