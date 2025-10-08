@@ -26,10 +26,10 @@ jobs:
         run: cd workspaces/staging
 
       - name: Terraform Init (Stg)
-        run: terraform init
+        run: cd workspaces/staging && terraform init
 
       - name: Terraform Validate (Stg)
-        run: terraform validate
+        run: cd workspaces/staging && terraform validate
 
       - name: List files
         run: ls -R  
@@ -39,23 +39,23 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
       - name: Run TFLint (Stg)
-        run: tflint #--config=./.tflint.hcl
+        run: cd workspaces/staging && tflint --config=tflint.hcl
 
-      # - name: Install Checkov
-      #   run: |
-      #     pip install checkov
+      - name: Install Checkov
+        run: |
+          pip install checkov
 
-      # - name: Run Checkov (Stg)
-      #   run: checkov -d . --config-file=files/checkov.yml
+      - name: Run Checkov (Stg)
+        run: cd workspaces/staging && checkov -d . --config-file=files/checkov.yml
 
-      - name: Run Checkov
-        uses: bridgecrewio/checkov-action@v2
-        with:
-          directory: .
-          config_file: files/checkov.yml  # Ensure this path is correct
+      # - name: Run Checkov
+      #   uses: bridgecrewio/checkov-action@v2
+      #   with:
+      #     directory: .
+      #     config_file: files/checkov.yml  # Ensure this path is correct
 
       - name: Check Terraform Format
-        run: terraform fmt -check
+        run: cd workspaces/staging && terraform fmt -check
 
 
       - name: Trigger Workflow STG CD
