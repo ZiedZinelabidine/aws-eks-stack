@@ -15,6 +15,7 @@ jobs:
       env: staging
 
   deploy:
+    needs: validate
     uses: ./.github/workflows/cd-stg.yaml
     with:
       env: staging
