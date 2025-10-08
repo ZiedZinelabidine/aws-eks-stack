@@ -20,7 +20,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.13.0
       
       - name: Change to ${{ inputs.env }} workspace
         run: cd workspaces/prod
@@ -49,7 +49,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.13.0
       
       - name: Change to ${{ inputs.env }} workspace
         run: cd workspaces/${{ inputs.env }}
