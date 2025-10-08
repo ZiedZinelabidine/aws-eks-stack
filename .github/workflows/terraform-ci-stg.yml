@@ -31,6 +31,9 @@ jobs:
       - name: Terraform Validate (Stg)
         run: terraform validate
 
+      - name: List files
+        run: ls -R  
+
       - name: Install TFLint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
@@ -38,12 +41,18 @@ jobs:
       - name: Run TFLint (Stg)
         run: tflint #--config=./.tflint.hcl
 
-      - name: Install Checkov
-        run: |
-          pip install checkov
+      # - name: Install Checkov
+      #   run: |
+      #     pip install checkov
 
-      - name: Run Checkov (Stg)
-        run: checkov -d . --config-file=files/checkov.yml
+      # - name: Run Checkov (Stg)
+      #   run: checkov -d . --config-file=files/checkov.yml
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v2
+        with:
+          directory: .
+          config_file: files/checkov.yml  # Ensure this path is correct
 
       - name: Check Terraform Format
         run: terraform fmt -check
