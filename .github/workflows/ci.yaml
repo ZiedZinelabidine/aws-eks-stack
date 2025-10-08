@@ -1,0 +1,58 @@
+name: TF format and validate
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: 'Environment to use (e.g., staging, production)'
+        required: true
+        type: string
+
+jobs:
+  validate:
+    name: Validate Terraform (${{ inputs.env }})
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Change to ${{ inputs.env }} workspace
+        run: cd workspaces/${{ inputs.env }}
+
+      - name: Terraform Init (Stg)
+        run: cd workspaces/${{ inputs.env }} && terraform init
+
+      - name: Terraform Validate (Stg)
+        run: cd workspaces/${{ inputs.env }} && terraform validate
+
+      - name: List files
+        run: ls -R  
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint (${{ inputs.env }})
+        run: cd workspaces/${{ inputs.env }} && tflint --config=tflint.hcl
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov (${{ inputs.env }})
+        run: cd workspaces/${{ inputs.env }} && checkov -d . --config-file=files/checkov.yml
+
+      # - name: Run Checkov
+      #   uses: bridgecrewio/checkov-action@v2
+      #   with:
+      #     directory: .
+      #     config_file: files/checkov.yml  # Ensure this path is correct
+
+      - name: Check Terraform Format
+        run: cd workspaces/${{ inputs.env }} && terraform fmt -check

@@ -1,11 +1,15 @@
-name: Terraform CD - Staging
+name: Terraform CD (${{ inputs.env }})
 
 on:
-  workflow_dispatch:
-
+  workflow_call:
+    inputs:
+      env:
+        description: 'Environment to use (e.g., staging, production)'
+        required: true
+        type: string
 jobs:
   plan:
-    name: Terraform Plan (Stg)
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     steps:
@@ -16,24 +20,24 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
+      
+      - name: Change to ${{ inputs.env }} workspace
+        run: cd workspaces/prod
 
-      - name: Change to Staging workspace
-        run: cd workspaces/staging
-
-      - name: Terraform Init (Stg)
+      - name: Terraform Init 
         run: terraform init
 
-      - name: Terraform Plan (Stg)
-        run: terraform plan -out=tfplan #-var-file=workspaces/stg/terraform.tfvars
+      - name: Terraform Plan ${{ inputs.env }}
+        run: terraform plan -out=tfplan
 
       - name: Save Terraform Plan
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan-stg
+          name: tfplan-${{ inputs.env }}
           path: tfplan
 
   apply:
-    name: Terraform Apply (Stg)
+    name: Terraform Apply 
     runs-on: ubuntu-latest
     needs: plan
 
@@ -46,28 +50,28 @@ jobs:
         with:
           terraform_version: 1.5.0
       
-      - name: Change to Staging workspace
-        run: cd workspaces/staging
+      - name: Change to ${{ inputs.env }} workspace
+        run: cd workspaces/${{ inputs.env }}
 
-      - name: Terraform Init (Stg)
+      - name: Terraform Init
         run: terraform init
 
       - name: Download Terraform Plan
         uses: actions/download-artifact@v3
         with:
-          name: tfplan-stg
+          name: tfplan-prod
           path: .
 
-      - name: Terraform Apply (Stg)
+      - name: Terraform Apply 
         run: terraform apply tfplan
 
-      - name: Trigger Workflow PROD CI
+      - name: Trigger Workflow PROD CD
         uses: actions/github-script@v6
         with:
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'terraform-ci-prod.yml',
+              workflow_id: 'terraform-ci-cd-prod.yml',
               ref: 'main'
             })

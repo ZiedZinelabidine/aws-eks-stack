@@ -1,0 +1,20 @@
+name: Terraform CI - Staging
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    uses: ./.github/workflows/ci.yaml
+    with:
+      env: staging
+
+  deploy:
+    uses: ./.github/workflows/cd-stg.yaml
+    with:
+      env: staging
