@@ -14,7 +14,7 @@ jobs:
     with:
       env: staging
 
-  # deploy:
-  #   uses: ./.github/workflows/cd-stg.yaml
-  #   with:
-  #     env: staging
+  deploy:
+    uses: ./.github/workflows/cd-stg.yaml
+    with:
+      env: staging
