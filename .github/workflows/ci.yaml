@@ -46,8 +46,10 @@ jobs:
 
       - name: Install tfsec
         run: |
-          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash +u
-
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh -o install.sh
+          sed -i 's/set -u/# set -u/' install.sh  # Comment out or remove the `set -u` line
+          bash install.sh
+          
       - name: Run tfsec
         continue-on-error: true
         run: tfsec workspaces/${{ inputs.env }}
