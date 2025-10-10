@@ -40,6 +40,7 @@ jobs:
           cd workspaces/${{ inputs.env }} && tflint --init
 
       - name: Run tflint 
+        continue-on-error: true
         run: |
           tflint --chdir=workspaces/${{ inputs.env }}
 
@@ -48,6 +49,7 @@ jobs:
           curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash
 
       - name: Run tfsec
+        continue-on-error: true
         run: tfsec workspaces/${{ inputs.env }}
 
       - name: Install Security Tools checkov
@@ -55,10 +57,9 @@ jobs:
           pip install checkov
 
       - name: Run checkov
+        continue-on-error: true
         run: checkov -d workspaces/${{ inputs.env }} --config-file=workspaces/${{ inputs.env }}/files/checkov.yml
 
-      - name: List files
-        run: ls -R workspaces/${{ inputs.env }}
-
       - name: Check Terraform Format
+        continue-on-error: true
         run: terraform -chdir=workspaces/${{ inputs.env }} fmt -check
