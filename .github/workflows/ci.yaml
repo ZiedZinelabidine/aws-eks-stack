@@ -51,9 +51,6 @@ jobs:
           working_directory: workspaces/${{ inputs.env }}
           sarif_file: tfsec.sarif     
 
-            - name: Checkout repo
-        uses: actions/checkout@master
-
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@master
