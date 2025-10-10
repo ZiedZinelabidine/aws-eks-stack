@@ -40,16 +40,16 @@ jobs:
       - name: Run tflint
         run: |
           tflint --init
-          tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
+          tflint --chdir=workspaces/${{ inputs.env }}
 
       - name: Run tfsec
-        run: tfsec .
+        run: tfsec workspaces/${{ inputs.env }}
 
       - name: Run checkov
-        run: checkov -d . --config-file=workspaces/${{ inputs.env }}/files/checkov.yml   
+        run: checkov -d workspaces/${{ inputs.env }} --config-file=workspaces/${{ inputs.env }}/files/checkov.yml
 
       - name: List files
-        run: ls -R  
+        run: ls -R workspaces/${{ inputs.env }}
 
       - name: Check Terraform Format
-        run: cd workspaces/${{ inputs.env }} && terraform fmt -check
+        run: terraform -chdir=workspaces/${{ inputs.env }} fmt -check
