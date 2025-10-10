@@ -37,12 +37,11 @@ jobs:
 
       - name: Run tflint Init
         run: |
-          tflint --init
+          cd workspaces/${{ inputs.env }} && tflint --init
 
       - name: Run tflint 
         run: |
           tflint --chdir=workspaces/${{ inputs.env }}
-
 
       - name: Install Security Tools tfsec
         run: |
