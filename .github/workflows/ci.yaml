@@ -51,13 +51,27 @@ jobs:
           working_directory: workspaces/${{ inputs.env }}
           sarif_file: tfsec.sarif     
 
-      - name: Install Security Tools checkov
-        run: |
-          pip install checkov
+            - name: Checkout repo
+        uses: actions/checkout@master
 
-      - name: Run checkov
-        continue-on-error: true
-        run: checkov -d workspaces/${{ inputs.env }} --config-file=workspaces/${{ inputs.env }}/files/checkov.yml
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: workspaces/${{ inputs.env }}/
+          quiet: true # optional: display only failed checks
+          soft_fail: true # optional: do not return an error code if there are failed checks
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          skip_framework: terraform # optional: skip a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          output_file_path: reports/results.sarif # folder and name of results file
+          output_bc_ids: true # optional: output Bridgecrew platform IDs instead of checkov IDs
+          download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
+          log_level: DEBUG # optional: set log level. Default WARNING
+          config_file: workspaces/${{ inputs.env }}/files/checkov.yml
+          baseline: cloudformation/.checkov.baseline # optional: Path to a generated baseline file. Will only report results not in the baseline.
+          container_user: 1000 # optional: Define what UID and / or what GID to run the container under to prevent permission issues
+          use_enforcement_rules: true # optional - use enforcement rule configs from the platform    
 
       - name: Check Terraform Format
         continue-on-error: true
