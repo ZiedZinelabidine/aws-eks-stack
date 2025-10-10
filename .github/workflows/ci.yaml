@@ -45,13 +45,11 @@ jobs:
         run: |
           tflint --chdir=workspaces/${{ inputs.env }}
 
-      - name: Install tfsec
-        run: |
-            curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash +u     
-                 
-      - name: Run tfsec
-        continue-on-error: true
-        run: tfsec workspaces/${{ inputs.env }}
+      - name: tfsec
+        uses: aquasecurity/tfsec-sarif-action@v0.1.0
+        with:
+          working_directory: workspaces/${{ inputs.env }}
+          sarif_file: tfsec.sarif     
 
       - name: Install Security Tools checkov
         run: |
