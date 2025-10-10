@@ -16,5 +16,5 @@ check:
   - CKV_AWS_4
 
 # Configurer les règles de sécurité pour AWS (optionnel)
-framework: terraform
+framework: aws
 secrets-scan: true  # Activer la détection des secrets dans le code
