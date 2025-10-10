@@ -31,18 +31,29 @@ jobs:
         with:
           terraform_version: 1.13.0
 
-      - name: Install Security Tools
+      - name: Install Security Tools tflint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-
-      - name: Run tflint
+      - name: Run tflint Init
         run: |
           tflint --init
+
+      - name: Run tflint 
+        run: |
           tflint --chdir=workspaces/${{ inputs.env }}
+
+
+      - name: Install Security Tools tfsec
+        run: |
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash
 
       - name: Run tfsec
         run: tfsec workspaces/${{ inputs.env }}
+
+      - name: Install Security Tools checkov
+        run: |
+          pip install checkov
 
       - name: Run checkov
         run: checkov -d workspaces/${{ inputs.env }} --config-file=workspaces/${{ inputs.env }}/files/checkov.yml
