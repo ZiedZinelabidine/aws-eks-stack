@@ -56,7 +56,8 @@ jobs:
         uses: bridgecrewio/checkov-action@v2
         with:
           directory: workspaces/${{ inputs.env }}/
-          config_file: workspaces/${{ inputs.env }}/files/checkov.yml 
+          config_file: workspaces/${{ inputs.env }}/files/checkov.yml
+          download-external-modules: true
           #log_level: DEBUG # optional: set log level. Default WARNING
 
       - name: Check Terraform Format
