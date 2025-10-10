@@ -7,8 +7,6 @@ on:
         description: 'Environment to use (e.g., staging, production)'
         required: true
         type: string
-    permissions:
-      id-token: write  # Autoriser l'écriture de JWT        
 
 
 jobs:

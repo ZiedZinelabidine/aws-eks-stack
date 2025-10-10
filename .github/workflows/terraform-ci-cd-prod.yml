@@ -2,8 +2,7 @@ name: Terraform CI - Production
 
 on:
   workflow_dispatch:
-  permissions:
-      id-token: write  # Autoriser l'écriture de JWT
+
 
 jobs:
   validate:
