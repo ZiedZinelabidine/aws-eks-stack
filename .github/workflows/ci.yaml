@@ -51,7 +51,7 @@ jobs:
         run: cd workspaces/${{ inputs.env }} && tflint --init
 
       - name: Run TFLint (${{ inputs.env }})
-        run: tflint --init && tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
+        run:  tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
 
       - name: Install Checkov
         run: |
