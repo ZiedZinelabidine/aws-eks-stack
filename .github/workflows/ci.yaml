@@ -61,7 +61,7 @@ jobs:
 
       # Étape 3: Installation de Checkov
       - name: Install Checkov
-        run: pip install checkov
+        run: pip install checkov==2.5.20
 
       # Étape 4: Scanner le code Terraform avec Checkov
       - name: Run Checkov scan
