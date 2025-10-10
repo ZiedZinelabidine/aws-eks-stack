@@ -31,45 +31,25 @@ jobs:
         with:
           terraform_version: 1.13.0
 
-      - name: Change to ${{ inputs.env }} workspace
-        run: cd workspaces/${{ inputs.env }}
+      - name: Install Security Tools
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash
+          pip install checkov
 
-      - name: Terraform Init (Stg)
-        run: cd workspaces/${{ inputs.env }} && terraform init
+      - name: Run tflint
+        run: |
+          tflint --init
+          tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
 
-      - name: Terraform Validate (Stg)
-        run: cd workspaces/${{ inputs.env }} && terraform validate
+      - name: Run tfsec
+        run: tfsec .
+
+      - name: Run checkov
+        run: checkov -d . --config-file=workspaces/${{ inputs.env }}/files/checkov.yml   
 
       - name: List files
         run: ls -R  
-
-      - name: Install TFLint
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-      - name: Run TFLint (${{ inputs.env }})
-        run: cd workspaces/${{ inputs.env }} && tflint --init
-
-      - name: Run TFLint (${{ inputs.env }})
-        run:  tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
-
-      - name: Run tfsec
-        uses: tfsec/tfsec-action@v1
-        with:
-          directory: workspaces/${{ inputs.env }} 
-
-      - name: Install Checkov
-        run: |
-          pip install checkov
-
-      - name: Run Checkov (${{ inputs.env }})
-        run:  checkov -d . --config-file=workspaces/${{ inputs.env }}/files/checkov.yml
-
-      # - name: Run Checkov
-      #   uses: bridgecrewio/checkov-action@v2
-      #   with:
-      #     directory: .
-      #     config_file: files/checkov.yml  # Ensure this path is correct
 
       - name: Check Terraform Format
         run: cd workspaces/${{ inputs.env }} && terraform fmt -check

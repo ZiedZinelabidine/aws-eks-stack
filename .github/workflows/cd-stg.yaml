@@ -33,11 +33,15 @@ jobs:
         with:
           terraform_version: 1.13.0
      
-      - name: Change to ${{ inputs.env }} workspace
-        run: cd workspaces/prod
 
-      - name: Terraform Init 
-        run: terraform init
+      - name: Change to ${{ inputs.env }} workspace
+        run: cd workspaces/${{ inputs.env }}
+
+      - name: Terraform Init (Stg)
+        run:  terraform init
+
+      - name: Terraform Validate (Stg)
+        run:  terraform validate  
 
       - name: Terraform Plan ${{ inputs.env }}
         run: terraform plan -out=tfplan
