@@ -51,22 +51,22 @@ jobs:
           working_directory: workspaces/${{ inputs.env }}
           sarif_file: tfsec.sarif     
 
-      # - name: Run Checkov action
-      #   id: checkov
-      #   uses: bridgecrewio/checkov-action@v2
-      #   with:
-      #     directory: workspaces/${{ inputs.env }}/
-      #     config_file: workspaces/${{ inputs.env }}/files/checkov.yml
-      #     #log_level: DEBUG # optional: set log level. Default WARNING
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@v2
+        with:
+          directory: workspaces/${{ inputs.env }}/
+          config_file: workspaces/${{ inputs.env }}/files/checkov.yml
+          #log_level: DEBUG # optional: set log level. Default WARNING
 
       # Étape 3: Installation de Checkov
-      - name: Install Checkov
-        run: pip install checkov==3.0.0
+      # - name: Install Checkov
+      #   run: pip install checkov==3.2.54
 
-      # Étape 4: Scanner le code Terraform avec Checkov
-      - name: Run Checkov scan
-        run: |
-          checkov -d workspaces/${{ inputs.env }} --config-file workspaces/${{ inputs.env }}/files/checkov.yml
+      # # Étape 4: Scanner le code Terraform avec Checkov
+      # - name: Run Checkov scan
+      #   run: |
+      #     checkov -d workspaces/${{ inputs.env }} --config-file workspaces/${{ inputs.env }}/files/checkov.yml
 
       - name: Check Terraform Format
         continue-on-error: true
