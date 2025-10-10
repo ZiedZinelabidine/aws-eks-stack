@@ -25,14 +25,3 @@ rule "terraform_documented_variables" {
 rule "terraform_typed_variables" {
   enabled = true
 }
-
-# Exclure certaines règles (optionnel)
-rule "aws_instance_previous_type" {
-  enabled = false
-}
-
-# Configurer des règles spécifiques (optionnel)
-rule "aws_s3_bucket_acl" {
-  enabled = true
-  values  = ["private", "log-delivery-write"]
-}
