@@ -68,7 +68,6 @@ jobs:
           config_file: workspaces/${{ inputs.env }}/files/checkov.yml
           baseline: cloudformation/.checkov.baseline # optional: Path to a generated baseline file. Will only report results not in the baseline.
           container_user: 1000 # optional: Define what UID and / or what GID to run the container under to prevent permission issues
-          use_enforcement_rules: true # optional - use enforcement rule configs from the platform    
 
       - name: Check Terraform Format
         continue-on-error: true
