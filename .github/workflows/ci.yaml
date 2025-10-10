@@ -53,6 +53,11 @@ jobs:
       - name: Run TFLint (${{ inputs.env }})
         run:  tflint --config=workspaces/${{ inputs.env }}/.tflint.hcl
 
+      - name: Run tfsec
+        uses: tfsec/tfsec-action@v1
+        with:
+          directory: workspaces/${{ inputs.env }} 
+
       - name: Install Checkov
         run: |
           pip install checkov

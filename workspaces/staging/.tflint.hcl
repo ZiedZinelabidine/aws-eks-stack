@@ -6,14 +6,6 @@ plugin "aws" {
   source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
 
-rule "aws_instance_invalid_type" {
-  enabled = true
-}
-
-rule "aws_s3_bucket_name_invalid" {
-  enabled = true
-}
-
 rule "terraform_required_version" {
   enabled = true
 }
