@@ -48,6 +48,9 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
       - name: Run TFLint (${{ inputs.env }})
+        run: cd workspaces/${{ inputs.env }} && tflint init
+
+      - name: Run TFLint (${{ inputs.env }})
         run: cd workspaces/${{ inputs.env }} && tflint --config=.tflint.hcl
 
       - name: Install Checkov
