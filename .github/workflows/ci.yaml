@@ -56,16 +56,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v2
         with:
           directory: workspaces/${{ inputs.env }}/
-          quiet: true # optional: display only failed checks
-          soft_fail: true # optional: do not return an error code if there are failed checks
-          output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
-          output_file_path: reports/results.sarif # folder and name of results file
-          output_bc_ids: true # optional: output Bridgecrew platform IDs instead of checkov IDs
-          download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
-          config_file: workspaces/${{ inputs.env }}/files/checkov.yml
-          container_user: 1000 # optional: Define what UID and / or what GID to run the container under to prevent permission issues
-          use_enforcement_rules: false # optional - use enforcement rule configs from the platform
-          check: CKV_AWS_19,CKV_AWS_21,CKV_AWS_1,CKV_AWS_2,CKV_AWS_3,CKV_AWS_4    
+          config_file: workspaces/${{ inputs.env }}/files/checkov.yml 
           #log_level: DEBUG # optional: set log level. Default WARNING
 
       - name: Check Terraform Format
