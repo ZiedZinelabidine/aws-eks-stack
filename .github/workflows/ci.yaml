@@ -47,8 +47,7 @@ jobs:
       - name: Install tfsec
         run: |
           wget -q https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh -O install.sh
-          sed -i 's/set -u/# set -u/' install.sh  # Comment out or remove the `set -u` line
-          bash install.sh
+          bash +u install.sh
           
       - name: Run tfsec
         continue-on-error: true
